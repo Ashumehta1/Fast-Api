@@ -1,0 +1,58 @@
+[
+  {
+    "patient_id": "P001",
+    "name": "Amit Sharma",
+    "age": 34,
+    "gender": "Male",
+    "blood_group": "B+",
+    "contact": "9876543210",
+    "address": "Delhi, India",
+    "medical_history": ["Hypertension"],
+    "allergies": ["Penicillin"]
+  },
+  {
+    "patient_id": "P002",
+    "name": "Neha Verma",
+    "age": 28,
+    "gender": "Female",
+    "blood_group": "O+",
+    "contact": "9812345678",
+    "address": "Mumbai, India",
+    "medical_history": ["Asthma"],
+    "allergies": []
+  },
+  {
+    "patient_id": "P003",
+    "name": "Rohit Gupta",
+    "age": 45,
+    "gender": "Male",
+    "blood_group": "A-",
+    "contact": "9123456789",
+    "address": "Kolkata, India",
+    "medical_history": ["Diabetes", "High Cholesterol"],
+    "allergies": ["Dust", "Peanuts"]
+  },
+  {
+    "patient_id": "P004",
+    "name": "Priya Nair",
+    "age": 37,
+    "gender": "Female",
+    "blood_group": "AB+",
+    "contact": "9001122334",
+    "address": "Bangalore, India",
+    "medical_history": ["Thyroid Disorder"],
+    "allergies": ["Seafood"]
+  },
+  {
+    "patient_id": "P005",
+    "name": "Arjun Mehta",
+    "age": 52,
+    "gender": "Male",
+    "blood_group": "O-",
+    "contact": "9898989898",
+    "address": "Chennai, India",
+    "medical_history": ["Cardiac Issues"],
+    "allergies": []
+  }
+]
+
