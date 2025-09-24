@@ -1,5 +1,6 @@
-{
-  "P001": {
+[
+  {
+    "patient_id": "P001",
     "name": "Amit Sharma",
     "age": 34,
     "gender": "Male",
@@ -9,7 +10,8 @@
     "medical_history": ["Hypertension"],
     "allergies": ["Penicillin"]
   },
-  "P002": {
+  {
+    "patient_id": "P002",
     "name": "Neha Verma",
     "age": 28,
     "gender": "Female",
@@ -19,7 +21,8 @@
     "medical_history": ["Asthma"],
     "allergies": []
   },
-  "P003": {
+  {
+    "patient_id": "P003",
     "name": "Rohit Gupta",
     "age": 45,
     "gender": "Male",
@@ -29,7 +32,8 @@
     "medical_history": ["Diabetes", "High Cholesterol"],
     "allergies": ["Dust", "Peanuts"]
   },
-  "P004": {
+  {
+    "patient_id": "P004",
     "name": "Priya Nair",
     "age": 37,
     "gender": "Female",
@@ -39,7 +43,8 @@
     "medical_history": ["Thyroid Disorder"],
     "allergies": ["Seafood"]
   },
-  "P005": {
+  {
+    "patient_id": "P005",
     "name": "Arjun Mehta",
     "age": 52,
     "gender": "Male",
@@ -49,8 +54,5 @@
     "medical_history": ["Cardiac Issues"],
     "allergies": []
   }
-}
-
-
-
+]
 
