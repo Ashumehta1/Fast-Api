@@ -1,32 +1,57 @@
 #uvicorn main:app --reload
 from fastapi import FastAPI,Path,HTTPException,Query
 import json
-from pydantic import BaseModel,Field
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel,Field,computed_field
 #to add description in pydantic need to import Annotated from typing
-from typing import Annotated,List
+from typing import Annotated,List,Literal
 
 app=FastAPI()
 
 #pydantic
 class patient(BaseModel):
     id:Annotated[str,Field(...,description="Id of patient", examples=["P001"])]
-    name:str
-    age:int
-    gender:str
-    blood_group:str
-    contact:str
-    address:str
-    medical_history:List[str]
-    allergies:List[str]
-    height:float
-    weight:float
-    bmi:float
+    name:Annotated[str,Field(...,description="Name of patient", examples="Ashish")]
+    age:Annotated[int,Field(...,description="Age of patient",ge=0,lt=150)]
+    gender:Annotated[Literal["male","female","others"],Field(...,description="gender of the patient")]
+    blood_group:Annotated[str,Field(..., description="bload group of patient", examples="A+")]
+    contact:Annotated[str,Field(description="contact details")]
+    address:Annotated[str,Field(description="Address of patient")]
+    medical_history:Annotated[List[str],Field(description="any medical record if any")]
+    allergies:Annotated[List[str],Field(description="any type of allergies")]
+    height:Annotated[float,Field(...,description="height of the patient in mtrs", ge=0,examples="1.4")]
+    weight:Annotated[float,Field(...,description="weight of patient in kg",ge=0,examples="80.5")]
+    bmi:Annotated[float,Field(description="bmi will be auto calculate")]
+
+@computed_field
+@property
+def bmi(self) -> float:
+    """Automatically calculate BMI from height & weight"""
+    return round(self.weight/(self.height**2),2)
+
+@computed_field
+@property
+def vedic(self) -> str:
+    """BMI category based on WHO standards"""
+    if self.bmi < 18.5:
+        return "underweight"
+    elif self.bmi < 25:
+        return "normal"
+    elif self.bmi < 30:
+        return "overweight"
+    else:
+        return "obese"
 
 #load data
 def load_data():
     with open("patient.json" , "r") as f:
         data=json.load(f)
     return data
+
+#save data
+def save_data(data):
+    with open("patient.json","w") as f:
+        json.dump(data,f)
 
 @app.get("/")
 def patient_page():
@@ -64,3 +89,14 @@ def sort_patients(sort_by:str = Query(...,description="sort on the basis of heig
     sorted_data=sorted(data.values(),key=lambda x:x.get(sort_by,0),reverse=sort_order)
     return sorted_data
 
+@app.post("/create")
+def patient_create(patient:patient):#get data in patient variable and check and validate by patient pydantic
+    #load data
+    data=load_data()
+    #chech patient exist or not
+    if patient.id in data:
+        raise HTTPException(status_code=400, detail="paitent already exist")
+    else:
+        data[patient.id]=patient.model_dump(exclude=["id"])# model_dump change pydantic to dic
+        save_data(data)
+    return JSONResponse(status_code=201, content="patient created successfully")
