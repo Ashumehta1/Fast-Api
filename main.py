@@ -11,23 +11,24 @@ app=FastAPI()
 #pydantic
 class patient(BaseModel):
     id:Annotated[str,Field(...,description="Id of patient", examples=["P001"])]
-    name:Annotated[str,Field(...,description="Name of patient", examples="Ashish")]
+    name:Annotated[str,Field(...,description="Name of patient", examples=["Ashish"])]
     age:Annotated[int,Field(...,description="Age of patient",ge=0,lt=150)]
     gender:Annotated[Literal["male","female","others"],Field(...,description="gender of the patient")]
-    blood_group:Annotated[str,Field(..., description="bload group of patient", examples="A+")]
+    blood_group:Annotated[str,Field(..., description="bload group of patient", examples=["A+"])]
     contact:Annotated[str,Field(description="contact details")]
     address:Annotated[str,Field(description="Address of patient")]
     medical_history:Annotated[List[str],Field(description="any medical record if any")]
     allergies:Annotated[List[str],Field(description="any type of allergies")]
-    height:Annotated[float,Field(...,description="height of the patient in mtrs", ge=0,examples="1.4")]
-    weight:Annotated[float,Field(...,description="weight of patient in kg",ge=0,examples="80.5")]
-    bmi:Annotated[float,Field(description="bmi will be auto calculate")]
+    height:Annotated[float,Field(...,description="height of the patient in mtrs", ge=0,examples=[1.4])]
+    weight:Annotated[float,Field(...,description="weight of patient in kg",ge=0,examples=[80.5])]
+    
 
 @computed_field
 @property
 def bmi(self) -> float:
     """Automatically calculate BMI from height & weight"""
-    return round(self.weight/(self.height**2),2)
+    bmi=self.weight/(self.height**2)
+    return round(bmi,2)
 
 @computed_field
 @property
@@ -90,13 +91,22 @@ def sort_patients(sort_by:str = Query(...,description="sort on the basis of heig
     return sorted_data
 
 @app.post("/create")
-def patient_create(patient:patient):#get data in patient variable and check and validate by patient pydantic
+def patient_create(patient:patient):
+    #get data in patient variable and check and validate by patient pydantic
     #load data
     data=load_data()
     #chech patient exist or not
     if patient.id in data:
         raise HTTPException(status_code=400, detail="paitent already exist")
     else:
-        data[patient.id]=patient.model_dump(exclude=["id"])# model_dump change pydantic to dic
-        save_data(data)
+        #include_computed=True ensures bmi and vedic are saved
+        patient_dict = patient.model_dump(exclude=["id"])  # dump normal fields
+        patient_dict["id"] = patient.id
+        patient_dict["bmi"] = patient.bmi
+        patient_dict["vedic"] = patient.vedic
+
+  
+        # Save patient data
+        data[patient.id] = patient_dict
+
     return JSONResponse(status_code=201, content="patient created successfully")
