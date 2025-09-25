@@ -1,8 +1,26 @@
 #uvicorn main:app --reload
 from fastapi import FastAPI,Path,HTTPException,Query
 import json
+from pydantic import BaseModel,Field
+#to add description in pydantic need to import Annotated from typing
+from typing import Annotated,List
 
 app=FastAPI()
+
+#pydantic
+class patient(BaseModel):
+    id:Annotated[str,Field(...,description="Id of patient", examples=["P001"])]
+    name:str
+    age:int
+    gender:str
+    blood_group:str
+    contact:str
+    address:str
+    medical_history:List[str]
+    allergies:List[str]
+    height:float
+    weight:float
+    bmi:float
 
 #load data
 def load_data():
